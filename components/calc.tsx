@@ -10,6 +10,8 @@ const calc = () => {
     const screenRef = useRef<HTMLDivElement| null>(null)
     const screenNumbersRef = useRef<HTMLDivElement | null>(null)
     let screenNumbers: string = '';
+    const numberArray: string[] = ['0', '1', '2','3','4','5','6','7','8','9']
+    const operatorArray: string[] = ['*', '/', '+', '-']
 
     type math = (first: number, second:number ) => number;
     type handleClickFunction = (event: React.MouseEvent) => void//number | string
@@ -29,14 +31,45 @@ const calc = () => {
 
     const handleClick: handleClickFunction = (e: React.MouseEvent) => {
         if(e.currentTarget.id !== '='){
-            screenNumbers += e.currentTarget.id;
+
+            if (Number !== ''){
+                if (e.currentTarget.id === '+') {
+                    screenNumbers += e.currentTarget.id;
+                }
+                if (e.currentTarget.id === '*') {
+                    screenNumbers += e.currentTarget.id;
+                }
+                if (e.currentTarget.id === '/') {
+                    screenNumbers += e.currentTarget.id;
+                }
+            
+            }
+
+            //neg
+            if (e.currentTarget.id === '-') { 
+                if (screenNumbers[screenNumbers.length - 1] != '-') {
+                    screenNumbers += e.currentTarget.id;
+                } 
+                if(Number !== ''){
+                    if (Number !== '-'){
+                        screenNumbers += e.currentTarget.id;
+                    }
+  
+                }
+    
+            }  
+
+            if(e.currentTarget.id in numberArray){
+                screenNumbers += e.currentTarget.id;
+            }
+    
         }
 
         if(screenNumbersRef.current !== null){
             screenNumbersRef.current.innerHTML = screenNumbers;
         }
 
-        if(e.currentTarget.id in ['0', '1', '2','3','4','5','6','7','8','9']){
+        if(e.currentTarget.id in numberArray){
             Number += e.currentTarget.id;
         }
         if (Number !== ''){
@@ -66,12 +99,22 @@ const calc = () => {
     
         if (e.currentTarget.id === '-') {
             operator = '-';
+
             if(Number !== ''){
-                screenArray.push(Number);
+                if (Number !== '-'){
+                    screenArray.push(Number);
+                    screenArray.push(operator);
+                    Number = '';
+                    operator = '';
+                }
+
             }
-            screenArray.push(operator);
-            Number = '';
-            operator = '';
+
+            if(Number === '' || screenArray[screenArray.length-1] in operatorArray){
+                Number = operator;
+                operator = '';
+            }
+
         }
 
 
