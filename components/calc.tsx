@@ -1,84 +1,152 @@
 'use client'
 
-let firstNumber: number;
-let secondNumber: number;
-let secondNumberString: string = '';
-let screen: string = '';
-let operator: string;
-
-type math = (first: number, second:number ) => number;
-type handleClickFunction = (event: React.MouseEvent) => void//number | string
-
-const add: math = (first: number, second: number) => {
-    return first + second
-}
-const subtract: math = (first: number, second: number) => {
-    return first - second
-}
-const multiply: math = (first: number, second: number) => {
-    return first * second
-}
-const divide: math = (first: number, second: number) => {
-    return first / second
-}
-
-const handleClick: handleClickFunction = (e: React.MouseEvent) => {
-    if(firstNumber !== undefined && e.currentTarget.id !== '='){
-        secondNumberString += e.currentTarget.id;
-    }
-    
-    if ((e.currentTarget.id === '+') && firstNumber === undefined) {
-        operator = '+';
-        firstNumber = parseInt(screen);
-    }
-    if ((e.currentTarget.id === '-') && firstNumber === undefined) {
-        operator = '-';
-        firstNumber = parseInt(screen);
-    }
-    if ((e.currentTarget.id === '*') && firstNumber === undefined) {
-        operator = '*';
-        firstNumber = parseInt(screen);
-    }
-    if ((e.currentTarget.id === '/') && firstNumber === undefined) {
-        operator = '/';
-        firstNumber = parseInt(screen);
-    }
-
-    if ((e.currentTarget.id === '=') ) {
-        if (operator === '+'){
-            operator = '';
-            secondNumber = parseInt(secondNumberString)
-            console.log('result', add(firstNumber, secondNumber))
-        }
-        else if (operator === '-'){
-            operator = '';
-            secondNumber = parseInt(secondNumberString)
-            console.log('result', subtract(firstNumber, secondNumber))
-        }
-        else if (operator === '*'){
-            operator = '';
-            secondNumber = parseInt(secondNumberString)
-            console.log('result', multiply(firstNumber, secondNumber))
-        }
-        else if (operator === '/'){
-            operator = '';
-            secondNumber = parseInt(secondNumberString)
-            console.log('result', divide(firstNumber, secondNumber))
-        }
-    }
-    screen += e.currentTarget.id
-    console.log(e.currentTarget)
-    console.log(screen)
-    console.log('second', secondNumberString)
-
-
-} 
+import { useRef, useEffect } from "react";
 
 const calc = () => {
+    let screenArray: string[] = [];
+    let Number: string = '';
+    let operator: string = '';
+    let total: number = 0;
+    const screenRef = useRef<HTMLDivElement| null>(null)
+    const screenNumbersRef = useRef<HTMLDivElement | null>(null)
+    let screenNumbers: string = '';
+
+    type math = (first: number, second:number ) => number;
+    type handleClickFunction = (event: React.MouseEvent) => void//number | string
+
+    const add: math = (first: number, second: number) => {
+        return first + second
+    }
+    const subtract: math = (first: number, second: number) => {
+        return first - second
+    }
+    const multiply: math = (first: number, second: number) => {
+        return first * second
+    }
+    const divide: math = (first: number, second: number) => {
+        return first / second
+    }
+
+    const handleClick: handleClickFunction = (e: React.MouseEvent) => {
+        if(e.currentTarget.id !== '='){
+            screenNumbers += e.currentTarget.id;
+        }
+
+        if(screenNumbersRef.current !== null){
+            screenNumbersRef.current.innerHTML = screenNumbers;
+        }
+
+        if(e.currentTarget.id in ['0', '1', '2','3','4','5','6','7','8','9']){
+            Number += e.currentTarget.id;
+        }
+        if (Number !== ''){
+            if (e.currentTarget.id === '+') {
+                operator = '+';
+                screenArray.push(Number);
+                screenArray.push(operator);
+                Number = '';
+                operator = '';
+            }
+            if (e.currentTarget.id === '*') {
+                operator = '*';
+                screenArray.push(Number);
+                screenArray.push(operator);
+                Number = '';
+                operator = '';
+            }
+            if (e.currentTarget.id === '/') {
+                operator = '/';
+                screenArray.push(Number);
+                screenArray.push(operator);
+                Number = '';
+                operator = '';
+            }
+        
+        }
+    
+        if (e.currentTarget.id === '-') {
+            operator = '-';
+            if(Number !== ''){
+                screenArray.push(Number);
+            }
+            screenArray.push(operator);
+            Number = '';
+            operator = '';
+        }
+
+
+        if (e.currentTarget.id === '=') {
+            if(Number !== ''){
+                screenArray.push(Number);
+                Number = '';
+            }
+
+            if (screenArray.length >=3){
+                for (let i = 0; i < screenArray.length; i++){
+                    if ((screenArray[i] === '+')){
+
+                        if (total !== 0){
+                            total = add(total, parseFloat(screenArray[i+1]));
+                            console.log(total)
+                        }
+                        else{
+                            total = add(parseFloat(screenArray[i-1]), parseFloat(screenArray[i+1]));
+                            console.log(total);
+                        }
+                    }
+
+                    if ((screenArray[i] === '-')){
+
+                        if (total !== 0){
+                            total = subtract(total, parseFloat(screenArray[i+1]));
+                            console.log(total)
+                        }
+                        else{
+                            total = subtract(parseFloat(screenArray[i-1]), parseFloat(screenArray[i+1]));
+                            console.log(total);
+                        }
+                    }
+                    if ((screenArray[i] === '*')){
+                        if (total !== 0){
+                            total = multiply(total, parseFloat(screenArray[i+1]));
+                            console.log(total)
+                        }
+                        else{
+                            total = multiply(parseFloat(screenArray[i-1]), parseFloat(screenArray[i+1]));
+                            console.log(total);
+                        }
+                    }
+                    if ((screenArray[i] === '/')){
+
+                        if (total !== 0){
+                            total = divide(total, parseFloat(screenArray[i+1]));
+                            console.log(total)
+                        }
+                        else{
+                            total = divide(parseFloat(screenArray[i-1]), parseFloat(screenArray[i+1]));
+                            console.log(total);
+                        }
+                    }
+                }
+                
+                    if(screenRef.current !== null){
+                        screenRef.current.innerHTML = total.toString();
+                    }
+            }
+        }
+
+            
+
+        console.log('Number', Number)
+        console.log('array', screenArray)
+    } 
+
+
   return (
     <>
         <div>
-            <div>screen</div>
+            <div ref={screenNumbersRef}> </div>
+            <div ref={screenRef}></div>
             <div id='1' onClick={handleClick}>1</div>
             <div id='2' onClick={handleClick}>2</div>
             <div id='3' onClick={handleClick}>3</div>
