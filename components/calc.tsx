@@ -47,15 +47,21 @@ const calc = () => {
 
             //neg
             if (e.currentTarget.id === '-') { 
-                if (screenNumbers[screenNumbers.length - 1] != '-') {
+                if (screenNumbers.length === 0){
                     screenNumbers += e.currentTarget.id;
-                } 
-                if(Number !== ''){
-                    if (Number !== '-'){
+                    console.log('called this mo')
+                }
+
+                else if (screenNumbers.length > 1) {
+                    if(screenNumbers[screenNumbers.length - 1] === '-' && screenNumbers[screenNumbers.length - 2] !== '-'){
+                        screenNumbers += e.currentTarget.id;
+                        console.log('called this mf')
+                    }
+                    if(screenNumbers[screenNumbers.length - 1] != '-'){
                         screenNumbers += e.currentTarget.id;
                     }
-  
-                }
+
+                } 
     
             }  
 
