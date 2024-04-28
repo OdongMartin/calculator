@@ -85,7 +85,7 @@ const calc = () => {
         }
         if(e.currentTarget.id === 'Backspace'){
             screenNumbers = screenNumbers.substring(0, screenNumbers.length-1)
-            Number = Number.substring(0, Number.length-1)
+            
         }
 
         if(screenNumbersRef.current !== null){
@@ -150,9 +150,24 @@ const calc = () => {
         }
 
         if(e.currentTarget.id === 'Backspace'){
-            // screenArray.pop()
-        }
+            if(Number !== ''){
+                screenArray.push(Number);
+            }
+            Number = ''
 
+            if(screenArray.length >= 1){
+                let deleted: string = screenArray[screenArray.length - 1].substring(0 , screenArray[screenArray.length - 1].length-1)
+                let newScreenArray: string[] =[]
+                for (let i = 0; i < screenArray.length-1; i++){
+                    newScreenArray.push(screenArray[i]);
+                }
+                if(deleted !== ''){
+                    newScreenArray.push(deleted); 
+                }
+
+                screenArray = newScreenArray;
+            }
+        }
 
         // equals
         if (e.currentTarget.id === '=') {
