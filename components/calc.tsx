@@ -30,6 +30,11 @@ const calc = () => {
     }
 
     const handleClick: handleClickFunction = (e: React.MouseEvent) => {
+        if(e.currentTarget.id in numberArray){
+            Number += e.currentTarget.id;
+        }
+
+        //screen things
         if(e.currentTarget.id !== '='){
 
             if (Number !== ''){
@@ -44,18 +49,21 @@ const calc = () => {
                 }
             
             }
+            if (e.currentTarget.id === '.'){
+                if(!Number.includes('.')){
+                    screenNumbers += e.currentTarget.id;
+                }
 
+            }
             //neg
             if (e.currentTarget.id === '-') { 
                 if (screenNumbers.length === 0){
                     screenNumbers += e.currentTarget.id;
-                    console.log('called this mo')
                 }
 
                 else if (screenNumbers.length > 1) {
                     if(screenNumbers[screenNumbers.length - 1] === '-' && screenNumbers[screenNumbers.length - 2] !== '-'){
                         screenNumbers += e.currentTarget.id;
-                        console.log('called this mf')
                     }
                     if(screenNumbers[screenNumbers.length - 1] != '-'){
                         screenNumbers += e.currentTarget.id;
@@ -71,13 +79,21 @@ const calc = () => {
     
         }
 
+        if(e.currentTarget.id === 'Clear'){
+            screenNumbers = ''
+            Number = ''
+        }
+        if(e.currentTarget.id === 'Backspace'){
+            screenNumbers = screenNumbers.substring(0, screenNumbers.length-1)
+            Number = Number.substring(0, Number.length-1)
+        }
+
         if(screenNumbersRef.current !== null){
             screenNumbersRef.current.innerHTML = screenNumbers;
         }
 
-        if(e.currentTarget.id in numberArray){
-            Number += e.currentTarget.id;
-        }
+        // behind screen logic
+
         if (Number !== ''){
             if (e.currentTarget.id === '+') {
                 operator = '+';
@@ -102,6 +118,12 @@ const calc = () => {
             }
         
         }
+
+        if (e.currentTarget.id === '.'){
+            if (!Number.includes('.')){
+                Number += '.';
+            }
+        }
     
         if (e.currentTarget.id === '-') {
             operator = '-';
@@ -123,7 +145,16 @@ const calc = () => {
 
         }
 
+        if(e.currentTarget.id === 'Clear'){
+            screenArray = []
+        }
 
+        if(e.currentTarget.id === 'Backspace'){
+            // screenArray.pop()
+        }
+
+
+        // equals
         if (e.currentTarget.id === '=') {
             if(Number !== ''){
                 screenArray.push(Number);
@@ -206,10 +237,13 @@ const calc = () => {
             <div id='8' onClick={handleClick}>8</div>
             <div id='9' onClick={handleClick}>9</div>
             <div id='0' onClick={handleClick}>0</div>
+            <div id='.' onClick={handleClick}>.</div>
             <div id='+' onClick={handleClick}>+</div>
             <div id='-' onClick={handleClick}>-</div>
             <div id='*' onClick={handleClick}>*</div>
             <div id='/' onClick={handleClick}>/</div>
+            <div id='Backspace' onClick={handleClick}>Backspace</div>
+            <div id='Clear' onClick={handleClick}>Clear</div>
             <div id='=' onClick={handleClick}>=</div>
         </div>
     </>
