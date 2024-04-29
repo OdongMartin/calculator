@@ -258,7 +258,7 @@ const calc = () => {
   return (
     <>
         <div className="flex justify-center items-center ">
-            <div className="bg-slate-600 text-white w-60 h-auto">
+            <div className="bg-slate-600 text-white w-60 h-auto rounded-lg">
                 <div className="h-20 rounded-lg bg-blue-600">
                     <div className='px-2 font-bold overflow-hidden' ref={screenNumbersRef}>0</div>
                     <div className='p-2 font-extrabold text-2xl'ref={screenRef}>0</div>
