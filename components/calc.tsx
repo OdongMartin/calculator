@@ -160,8 +160,8 @@ const calc = () => {
         if(e.currentTarget.id === 'Backspace'){
             if(Number !== ''){
                 screenArray.push(Number);
+                Number = ''
             }
-            Number = ''
 
             if(screenArray.length >= 1){
                 let deleted: string = screenArray[screenArray.length - 1].substring(0 , screenArray[screenArray.length - 1].length-1)
@@ -174,19 +174,30 @@ const calc = () => {
                 }
 
                 screenArray = newScreenArray;
+ 
             }
+
+            // if ((screenArray[screenArray.length - 1] === '*'||screenArray[screenArray.length - 1] === '+' ||screenArray[screenArray.length - 1] === '-'||screenArray[screenArray.length - 1] === '/') && screenArray.length > 1){
+            //     Number = screenArray[screenArray.length - 2]
+            // }
+            // else{
+            //     Number = screenArray[screenArray.length - 1]
+            // }
         }
 
         // equals
         if (e.currentTarget.id === '=') {
             if(Number !== ''){
-                screenArray.push(Number);
+                if(screenNumbers.includes('*') || screenNumbers.includes('/') || screenNumbers.includes('+')|| screenNumbers.includes('-')){
+                    screenArray.push(Number);
+                }
+
                 if(screenArray.length > 2){
                     Number = '';
                 }
-                else {
-                    total = parseFloat(Number);
-                }
+                // else {
+                //     total = parseFloat(Number);
+                // }
 
             }
 
