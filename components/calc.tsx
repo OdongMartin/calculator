@@ -12,6 +12,7 @@ const calc = () => {
     let screenNumbers: string = '';
     const numberArray: string[] = ['0', '1', '2','3','4','5','6','7','8','9']
     const operatorArray: string[] = ['*', '/', '+', '-']
+    let previousBackspace: boolean = false;
 
     type math = (first: number, second:number ) => number;
     type handleClickFunction = (event: React.MouseEvent) => void//number | string
@@ -158,7 +159,8 @@ const calc = () => {
         }
 
         if(e.currentTarget.id === 'Backspace'){
-            if(Number !== ''){
+            
+            if(Number !== '' /*&& previousBackspace === false*/){
                 screenArray.push(Number);
                 Number = ''
             }
@@ -177,12 +179,14 @@ const calc = () => {
  
             }
 
-            // if ((screenArray[screenArray.length - 1] === '*'||screenArray[screenArray.length - 1] === '+' ||screenArray[screenArray.length - 1] === '-'||screenArray[screenArray.length - 1] === '/') && screenArray.length > 1){
-            //     Number = screenArray[screenArray.length - 2]
-            // }
-            // else{
-            //     Number = screenArray[screenArray.length - 1]
-            // }
+            if ((screenArray[screenArray.length - 1] === '*'||screenArray[screenArray.length - 1] === '+' ||screenArray[screenArray.length - 1] === '-'||screenArray[screenArray.length - 1] === '/') && screenArray.length > 1){
+                Number = '0'
+            }
+            else{
+                Number = screenArray[screenArray.length - 1]
+            }
+
+            //previousBackspace = true;
         }
 
         // equals
@@ -312,3 +316,214 @@ const calc = () => {
 }
 
 export default calc
+
+// 'use client'
+
+// import React, { useState, useEffect } from 'react';
+
+// const Calculator = () => {
+//   const [display, setDisplay] = useState('0');
+//   const [expression, setExpression] = useState([]);
+//   const [currentInput, setCurrentInput] = useState('');
+//   const operators = ['+', '-', '*', '/'];
+
+//   const handleButtonClick = (id) => {
+//     switch (id) {
+//       case 'Clear':
+//         clearCalculator();
+//         break;
+//       case 'Backspace':
+//         handleBackspace();
+//         break;
+//       case '=':
+//         handleEqual();
+//         break;
+//       case '+':
+//       case '-':
+//       case '*':
+//       case '/':
+//         handleOperator(id);
+//         break;
+//       default:
+//         handleNumber(id);
+//     }
+//   };
+
+//   const clearCalculator = () => {
+//     setDisplay('0');
+//     setExpression([]);
+//     setCurrentInput('');
+//   };
+
+//   const handleBackspace = () => {
+//     if (currentInput.length > 0) {
+//       setCurrentInput(currentInput.slice(0, -1));
+//     }
+//   };
+
+//   const handleOperator = (operator) => {
+//     if (currentInput) {
+//       setExpression([...expression, currentInput, operator]);
+//       setCurrentInput('');
+//     } else {
+//       // Avoid consecutive operators
+//       const lastItem = expression[expression.length - 1];
+//       if (operators.includes(lastItem)) {
+//         setExpression(expression.slice(0, -1).concat(operator));
+//       }
+//     }
+//   };
+
+//   const handleNumber = (number) => {
+//     setCurrentInput(currentInput + number);
+//   };
+
+//   const handleEqual = () => {
+//     let expr = [...expression, currentInput];
+//     if (operators.includes(expr[expr.length - 1])) {
+//       expr = expr.slice(0, -1); // remove trailing operator
+//     }
+
+//     // Evaluate the expression
+//     try {
+//       const result = eval(expr.join(''));
+//       setDisplay(result.toString());
+//       setExpression([]);
+//       setCurrentInput('');
+//     } catch (e) {
+//       setDisplay('Error');
+//       setExpression([]);
+//       setCurrentInput('');
+//     }
+//   };
+
+//   useEffect(() => {
+//     setDisplay(currentInput || expression.join(' ') || '0');
+//   }, [currentInput, expression]);
+
+//   return (
+//     <div className="flex justify-center items-center">
+//       <div className="bg-slate-600 text-white w-60 h-auto rounded-lg">
+//         <div className="h-20 rounded-lg bg-blue-600 p-2 text-2xl font-extrabold">
+//           {display}
+//         </div>
+//         <div className="p-4 w-full">
+//           <div className="flex gap-4 mb-2">
+//             <div
+//               className="p-2 bg-gray-500 rounded-full w-20 flex justify-center"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => handleButtonClick('Clear')}
+//             >
+//               Clear
+//             </div>
+//             <div
+//               className="p-2 bg-gray-500 rounded-full w-36 flex justify-center"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => handleButtonClick('Backspace')}
+//             >
+//               Backspace
+//             </div>
+//           </div>
+//           <div className="flex gap-4 mb-2">
+//             <div
+//               className="p-2 bg-gray-500 rounded-full w-12 flex justify-center"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => handleButtonClick('7')}
+//             >
+//               7
+//             </div>
+//             <div
+//               className="p-2 bg-gray-500 rounded-full w-12 flex justify-center"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => handleButtonClick('8')}
+//             >
+//               8
+//             </div>
+//             <div
+//               className="p-2 bg-gray-500 rounded-full w-12 flex justify-center"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => handleButtonClick('9')}
+//             >
+//               9
+//             </div>
+//             <div
+//               className="p-2 bg-gray-500 rounded-full w-12 flex justify-center"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => handleButtonClick('*')}
+//             >
+//               *
+//             </div>
+//           </div>
+//           <div className="flex gap-4 mb-2">
+//             <div
+//               className="p-2 bg-gray-500 rounded-full w-12 flex justify-center"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => handleButtonClick('4')}
+//             >
+//               4
+//             </div>
+//             <div
+//               className="p-2 bg-gray-500 rounded-full w-12 flex justify-center"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => handleButtonClick('5')}
+//             >
+//               5
+//             </div>
+//             <div
+//               className="p-2 bg-gray-500 rounded-full w-12 flex justify-center"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => handleButtonClick('6')}
+//             >
+//               6
+//             </div>
+//             <div
+//               className="p-2 bg-gray-500 rounded-full w-12 flex justify-center"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => handleButtonClick('-')}
+//             >
+//               -
+//             </div>
+//           </div>
+//           <div className="flex gap-4 mb-2">
+//             <div
+//               className="p-2 bg-gray-500 rounded-full w-12 flex justify-center"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => handleButtonClick('1')}
+//             >
+//               1
+//             </div>
+//             <div
+//               className="p-2 bg-gray-500 rounded-full w-12 flex justify center"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => handleButtonClick('2')}
+//             >
+//               2
+//             </div>
+//             <div
+//               className="p-2 bg-gray-500 rounded-full w-12 flex justify center"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => handleButtonClick('3')}
+//             >
+//               3
+//             </div>
+//             <div
+//               className="p-2 bg-gray-500 rounded-full w-12 flex justify center"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => handleButtonClick('+')}
+//             >
+//               +
+//             </div>
+//           </div>
+//           <div className="flex gap-4">
+//             <div
+//               className="p-2 bg-gray-500 rounded-full w-12 flex justify center"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => handleButtonClick('0')}
+//             >
+//               0
+//             </div>
+//             <div
+//               className="p-2 bg-gray-500 rounded-full w-12 flex justify center"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => handleButtonClick('.')}
+//             >
